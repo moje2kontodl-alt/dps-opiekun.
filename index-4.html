@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f5efe3">
+<title>DPS Opiekun — wersja testowa</title>
+<style>
+:root{
+  --cream:#f5efe3;
+  --paper:#fffdf8;
+  --ink:#27333a;
+  --muted:#718087;
+  --green:#7f9f93;
+  --green2:#dfe9e5;
+  --blue:#6f98aa;
+  --blue2:#e2edf1;
+  --rose:#b98383;
+  --rose2:#f1e2e0;
+  --gold:#c9a86a;
+  --gold2:#f3ead7;
+  --line:#dfded7;
+  --shadow:0 14px 34px rgba(52,65,70,.10);
+  --radius:24px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--ink)}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.app{min-height:100vh;padding-bottom:118px}
+.shell{max-width:1100px;margin:0 auto;padding:18px}
+.top{
+  position:sticky;top:0;z-index:80;
+  background:rgba(245,239,227,.91);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(223,222,215,.9)
+}
+.top-inner{
+  max-width:1100px;margin:0 auto;padding:12px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px
+}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-mark{
+  width:48px;height:48px;border-radius:16px;background:var(--green);
+  color:#fff;display:grid;place-items:center;font-size:23px;font-weight:900;
+  box-shadow:0 8px 18px rgba(74,100,91,.18)
+}
+.logo-title{font-weight:900;font-size:18px;letter-spacing:.2px}
+.logo-sub{font-size:12px;color:var(--muted)}
+.demo{
+  background:var(--gold2);color:#795f2f;padding:8px 11px;border-radius:999px;
+  font-size:11px;font-weight:900;white-space:nowrap;border:1px solid #ead9b5
+}
+.card{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:18px
+}
+.login-wrap{
+  min-height:calc(100vh - 94px);display:grid;place-items:center;padding:18px 0
+}
+.login{
+  width:min(760px,100%);display:grid;gap:18px;
+  grid-template-columns:1fr
+}
+.login-hero{
+  background:linear-gradient(145deg,#fffdf8,#edf4f1);
+  border:1px solid var(--line);border-radius:30px;padding:24px;box-shadow:var(--shadow)
+}
+.login-hero h1{font-size:34px;line-height:1.05;margin:0 0 10px}
+.login-hero p{margin:0;color:var(--muted);line-height:1.5}
+.login-panel{display:grid;gap:14px}
+.field label{display:block;font-size:13px;font-weight:900;margin:0 0 6px}
+select,input,textarea{
+  width:100%;border:1px solid #cfd7d7;border-radius:15px;padding:13px 14px;
+  background:#fff;color:var(--ink);outline:none
+}
+.pin{letter-spacing:8px;font-size:22px;text-align:center}
+.btn{
+  border:0;border-radius:16px;padding:13px 16px;font-weight:900;
+  background:var(--green);color:#fff;box-shadow:0 8px 18px rgba(84,116,104,.18)
+}
+.btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none}
+.btn.rose{background:var(--rose)}
+.btn.gold{background:var(--gold)}
+.btn.small{padding:9px 12px;border-radius:12px;font-size:13px}
+.full{width:100%}
+.flex{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.between{justify-content:space-between}
+.screen{display:none}
+.screen.active{display:block}
+.hero-strip{
+  background:linear-gradient(145deg,#fffdf8,#edf4f1);
+  border:1px solid var(--line);border-radius:26px;padding:18px;
+  margin-bottom:16px;box-shadow:var(--shadow)
+}
+.hero-strip h2{margin:0 0 6px;font-size:25px}
+.hero-strip p{margin:0;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:15px}
+.stat{
+  background:#fff;border:1px solid var(--line);border-radius:17px;padding:12px 13px
+}
+.stat span{display:block;color:var(--muted);font-size:12px}
+.stat b{display:block;font-size:20px;margin-top:3px}
+.start-grid{display:grid;grid-template-columns:1fr;gap:16px}
+.clock-card{text-align:center}
+.clock-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.clock-title h3{margin:0;font-size:19px}
+.clock-face{
+  position:relative;width:min(360px,82vw);aspect-ratio:1/1;margin:8px auto 4px
+}
+.clock-face svg{width:100%;height:100%;display:block}
+.clock-center{
+  position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%);
+  width:49%;aspect-ratio:1/1;border-radius:50%;background:var(--paper);
+  border:1px solid var(--line);display:grid;place-items:center;align-content:center;
+  box-shadow:0 9px 22px rgba(40,60,65,.08);padding:12px
+}
+.now{font-weight:950;font-size:30px}
+.now-label{font-size:12px;color:var(--muted)}
+.stage{font-size:13px;font-weight:850;margin-top:7px;color:#58776d}
+.clock-label{
+  position:absolute;font-weight:900;font-size:12px;background:#fff;
+  border:1px solid var(--line);padding:5px 8px;border-radius:999px
+}
+.c12{top:4px;left:50%;transform:translateX(-50%)}
+.c9{left:2px;top:50%;transform:translateY(-50%)}
+.c15{right:2px;top:50%;transform:translateY(-50%)}
+.c6{bottom:6px;left:36%;transform:translateX(-50%)}
+.c18{bottom:6px;left:67%;transform:translateX(-50%)}
+.timeline-ring-note{font-size:12px;color:var(--muted);margin-top:6px}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.tile{
+  background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:16px;
+  min-height:128px;box-shadow:0 8px 20px rgba(52,65,70,.06);
+  display:flex;flex-direction:column;justify-content:space-between
+}
+.tile-icon{
+  width:46px;height:46px;border-radius:15px;display:grid;place-items:center;
+  font-size:23px;margin-bottom:10px
+}
+.tile:nth-child(1) .tile-icon{background:var(--green2)}
+.tile:nth-child(2) .tile-icon{background:var(--blue2)}
+.tile:nth-child(3) .tile-icon{background:var(--gold2)}
+.tile:nth-child(4) .tile-icon{background:var(--rose2)}
+.tile:nth-child(5) .tile-icon{background:var(--blue2)}
+.tile:nth-child(6) .tile-icon{background:var(--green2)}
+.tile h3{margin:0 0 5px;font-size:17px}
+.tile p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.35}
+.tile button{
+  margin-top:12px;align-self:flex-start;border:1px solid var(--line);background:#fff;
+  border-radius:12px;padding:8px 11px;font-weight:850;color:var(--ink)
+}
+.section-card{margin-bottom:14px}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.section-title h3{margin:0;font-size:19px}
+.small{font-size:12px;color:var(--muted)}
+.tasklist{display:grid;gap:9px}
+.task{
+  display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;
+  background:#fff;border:1px solid var(--line);border-radius:17px;padding:11px 12px
+}
+.task.done{background:#f3f7f5;color:#66736e}
+.task.current{border:2px solid var(--green);box-shadow:0 0 0 4px rgba(127,159,147,.10)}
+.task .time{
+  font-weight:900;font-size:13px;background:var(--green2);border-radius:11px;
+  padding:6px 8px;text-align:center;color:#506e64
+}
+.task.done .time{background:#e9eeeb}
+.task input{width:22px;height:22px}
+.resident-grid{display:grid;gap:12px}
+.resident{
+  border:1px solid var(--line);background:#fff;border-radius:19px;padding:14px
+}
+.resident b{display:block;margin-bottom:5px}
+.tag{display:inline-block;font-size:11px;font-weight:900;padding:5px 8px;border-radius:999px;background:var(--blue2);color:#53717e;margin-bottom:8px}
+.bell-card{text-align:center}
+.bell-count{font-size:76px;font-weight:950;line-height:1;margin:8px 0}
+.bell-big{
+  width:min(270px,72vw);aspect-ratio:1/1;border-radius:50%;border:0;
+  background:radial-gradient(circle at 32% 28%,#d1b780,#c9a86a 52%,#ad8848 100%);
+  color:#fff;font-size:27px;font-weight:950;box-shadow:0 18px 34px rgba(166,132,73,.28)
+}
+.bell-big:active,.floating-bell:active{transform:scale(.98)}
+.note-grid{display:grid;gap:12px}
+.note-card{
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:13px
+}
+.note-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.note-time{font-size:11px;color:var(--muted)}
+.note-text{margin-top:5px;white-space:pre-wrap}
+textarea{min-height:110px;resize:vertical}
+.summary{
+  white-space:pre-wrap;border:1px dashed #bdc8c5;border-radius:17px;padding:13px;
+  background:#fbfcfa;line-height:1.45;min-height:130px
+}
+.report-grid{display:grid;gap:14px}
+.sign-grid{display:grid;gap:14px}
+.sigbox{background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px}
+canvas.signature{
+  width:100%;height:190px;background:#fff;border:2px solid #9fb0aa;border-radius:14px;
+  display:block;touch-action:none;user-select:none;-webkit-user-select:none;
+  cursor:crosshair;box-shadow:inset 0 0 0 1px rgba(127,159,147,.08)
+}
+.sigstate{font-size:12px;color:var(--muted);margin-top:8px}
+.sigstate.ok{color:#567e6e;font-weight:900}
+.actions{display:flex;flex-wrap:wrap;gap:9px}
+.bottomnav{
+  position:fixed;left:0;right:0;bottom:0;z-index:90;
+  background:rgba(255,253,248,.97);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);
+  padding:9px 8px calc(9px + env(safe-area-inset-bottom));
+  display:grid;grid-template-columns:repeat(6,1fr);gap:5px
+}
+.bottomnav button{
+  border:0;background:transparent;border-radius:13px;padding:9px 3px;
+  color:#6d797e;font-size:10px;font-weight:900;display:grid;justify-items:center;gap:4px
+}
+.bottomnav button.active{background:var(--green2);color:#506e64}
+.navicon{font-size:18px}
+.floating-bell{
+  position:fixed;right:17px;bottom:92px;z-index:95;
+  border:0;border-radius:999px;background:var(--gold);color:#fff;
+  padding:14px 17px;font-size:15px;font-weight:950;
+  box-shadow:0 12px 26px rgba(166,132,73,.30)
+}
+.toast{
+  position:fixed;left:50%;bottom:156px;transform:translateX(-50%) translateY(20px);
+  background:#303b40;color:#fff;padding:10px 14px;border-radius:999px;font-size:13px;
+  opacity:0;pointer-events:none;transition:.2s;z-index:120
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.resident{cursor:pointer;transition:.15s}
+.resident:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(52,65,70,.08)}
+.resident .open-hint{margin-top:10px;font-size:12px;font-weight:900;color:#5b746c}
+.resident-detail{display:none}
+.resident-detail.active{display:block}
+.resident-main.hidden-panel{display:none}
+.care-list{display:grid;gap:9px;margin-top:12px}
+.care-item{
+  display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+  background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px
+}
+.care-item.done{background:#f3f7f5;color:#69746f}
+.care-item input{width:22px;height:22px}
+.back-link{
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+  border-radius:12px;padding:9px 12px;font-weight:900
+}
+.resident-note{
+  margin-top:12px;padding:12px;border-radius:16px;background:#f8faf8;border:1px solid var(--line);
+  font-size:13px;line-height:1.45
+}
+
+
+.signature-preview-wrap{margin-top:12px}
+.signature-preview-label{font-size:12px;font-weight:900;color:var(--muted);margin-bottom:6px}
+.signature-preview{
+  min-height:86px;background:#fff;border:1px solid var(--line);border-radius:16px;
+  display:grid;place-items:center;padding:8px;overflow:hidden
+}
+.signature-preview img{
+  max-width:100%;max-height:70px;display:block;object-fit:contain
+}
+.signature-placeholder{
+  color:var(--muted);font-size:12px;text-align:center;line-height:1.4
+}
+.report-signatures{
+  display:grid;gap:10px;margin-top:14px
+}
+.report-sign-box{
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px
+}
+.report-sign-box b{
+  display:block;font-size:13px;margin-bottom:8px
+}
+.resident-sub{
+  margin-top:4px;color:var(--muted);font-size:13px;line-height:1.45
+}
+.resident-name{
+  font-size:17px
+}
+.resident-scenario{
+  display:inline-block;margin-top:8px;font-size:11px;font-weight:900;
+  padding:5px 8px;border-radius:999px;background:var(--gold2);color:#7d6131
+}
+
+@media(min-width:820px){
+  .login{grid-template-columns:1.15fr .85fr;align-items:stretch}
+  .start-grid{grid-template-columns:1.05fr .95fr}
+  .tiles{grid-template-columns:repeat(3,1fr)}
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .resident-grid{grid-template-columns:repeat(3,1fr)}
+  .report-grid{grid-template-columns:1.25fr .75fr}
+  .sign-grid{grid-template-columns:1fr 1fr}
+}
+@media print{
+  .top,.bottomnav,.floating-bell,.no-print{display:none!important}
+  body{background:#fff}.app{padding:0}.shell{padding:0}
+  .screen{display:none!important}#raport{display:block!important}
+  .card,.hero-strip{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="top-inner">
+    <div class="logo">
+      <div class="logo-mark">D</div>
+      <div>
+        <div class="logo-title">DPS Opiekun</div>
+        <div class="logo-sub">wersja testowa</div>
+      </div>
+    </div>
+    <div class="demo">TRYB DEMONSTRACYJNY</div>
+  </div>
+</div>
+
+<div class="app">
+  <main class="shell">
+    <section id="loginScreen" class="login-wrap">
+      <div class="login">
+        <div class="login-hero">
+          <h1>DPS Opiekun</h1>
+          <p>Prosty panel pracy opiekuna na zmianie 06:00–18:00. Dane w tej wersji są fikcyjne i służą wyłącznie do prezentacji.</p>
+          <div style="margin-top:20px" class="stats">
+            <div class="stat"><span>Zmiana</span><b>12 h</b></div>
+            <div class="stat"><span>Plan</span><b>06–18</b></div>
+          </div>
+        </div>
+        <div class="card login-panel">
+          <div>
+            <h2 style="margin:0 0 4px">Logowanie</h2>
+            <div class="small">Wybierz pracownika i wpisz PIN testowy.</div>
+          </div>
+          <div class="field">
+            <label for="worker">Pracownik</label>
+            <select id="worker">
+              <option>Anna Augustyn</option>
+              <option>Beata Bednarek</option>
+              <option>Filip Falkowski</option>
+              <option>Grażyna Gajda</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="pin">PIN</label>
+            <input id="pin" class="pin" type="password" inputmode="numeric" maxlength="4" value="1234" aria-label="PIN">
+          </div>
+          <button class="btn full" id="loginBtn">ZALOGUJ</button>
+          <button class="btn secondary full" id="demoBtn">WEJDŹ W TRYBIE DEMONSTRACYJNYM</button>
+          <div class="small" style="text-align:center">Testowy PIN: 1234</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="mainApp" class="hidden">
+      <section id="start" class="screen active">
+        <div class="hero-strip">
+          <div class="flex between">
+            <div>
+              <h2>Start</h2>
+              <p>Dyżur <b>06:00–18:00</b> • <span id="helloWorker">—</span></p>
+            </div>
+            <button class="btn secondary small no-print" id="logoutBtn">Wyloguj</button>
+          </div>
+          <div class="stats">
+            <div class="stat"><span>Wykonane</span><b id="statDone">0/20</b></div>
+            <div class="stat"><span>Dzwonki</span><b id="statBells">0</b></div>
+            <div class="stat"><span>Uwagi</span><b id="statNotes">0</b></div>
+            <div class="stat"><span>Podpisy</span><b id="statSigns">0/2</b></div>
+          </div>
+        </div>
+
+        <div class="start-grid">
+          <div class="card clock-card">
+            <div class="clock-title">
+              <h3>Tarcza dyżuru</h3>
+              <span class="small">6:00 na dole</span>
+            </div>
+            <div class="clock-face">
+              <svg viewBox="0 0 240 240" aria-hidden="true">
+                <circle cx="120" cy="120" r="95" fill="none" stroke="#e2e3dd" stroke-width="16"/>
+                <path id="clockProgress" d="" fill="none" stroke="#7f9f93" stroke-width="16" stroke-linecap="round"/>
+                <g id="tickGroup"></g>
+              </svg>
+              <div class="clock-center">
+                <div class="now" id="clockNow">--:--</div>
+                <div class="now-label">aktualna godzina</div>
+                <div class="stage" id="currentStage">Przed rozpoczęciem zmiany</div>
+              </div>
+              <div class="clock-label c12">12:00</div>
+              <div class="clock-label c9">09:00</div>
+              <div class="clock-label c15">15:00</div>
+              <div class="clock-label c6">06:00</div>
+              <div class="clock-label c18">18:00</div>
+            </div>
+            <div class="timeline-ring-note">Zakończone etapy są przygaszone, aktualny podświetlony, nadchodzące pozostają widoczne.</div>
+            <div id="stagePreview" class="tasklist" style="margin-top:14px"></div>
+          </div>
+
+          <div>
+            <div class="tiles">
+              <div class="tile">
+                <div><div class="tile-icon">📝</div><h3>Dniówka</h3><p>Plan 06:00–18:00 i odhaczanie czynności.</p></div>
+                <button data-jump="dniowka">Otwórz</button>
+              </div>
+              <div class="tile">
+                <div><div class="tile-icon">👥</div><h3>Mieszkańcy</h3><p>Fikcyjne scenariusze do testowania.</p></div>
+                <button data-jump="mieszkancy">Otwórz</button>
+              </div>
+              <div class="tile">
+                <div><div class="tile-icon">🔔</div><h3>Dzwonki</h3><p>Szybkie rejestrowanie alarmów jednym kliknięciem.</p></div>
+                <button data-jump="dzwonki">Otwórz</button>
+              </div>
+              <div class="tile">
+                <div><div class="tile-icon">✏️</div><h3>Zdarzenia / uwagi</h3><p>Krótkie informacje do późniejszego raportu.</p></div>
+                <button data-jump="uwagi">Otwórz</button>
+              </div>
+              <div class="tile">
+                <div><div class="tile-icon">📄</div><h3>Raport</h3><p>Podsumowanie całej zmiany.</p></div>
+                <button data-jump="raport">Otwórz</button>
+              </div>
+              <div class="tile">
+                <div><div class="tile-icon">✍️</div><h3>Podpisy</h3><p>Podpis pracownika i Pani Dyrektor.</p></div>
+                <button data-jump="podpisy">Otwórz</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="dniowka" class="screen">
+        <div class="hero-strip">
+          <h2>Dniówka</h2>
+          <p>Plan bez nazwisk mieszkańców • podział dyżuru 06:00–18:00.</p>
+        </div>
+        <div class="card section-card">
+          <div class="section-title">
+            <h3>Plan czynności</h3>
+            <span class="small"><span id="planDone">0</span>/<span id="planAll">20</span> wykonanych</span>
+          </div>
+          <div id="taskList" class="tasklist"></div>
+        </div>
+      </section>
+
+      <section id="mieszkancy" class="screen">
+        <div id="residentMain" class="resident-main">
+          <div class="hero-strip">
+            <h2>Mieszkańcy</h2>
+            <p>Wybierz mieszkańca, aby wejść w jego kartę i odhaczać wykonane czynności.</p>
+          </div>
+          <div class="resident-grid">
+            <div class="resident" data-resident="A">
+              <div class="tag">A</div>
+              <b class="resident-name">Alicja Adamska</b>
+              <div class="resident-sub">Osoba chodząca, demencja, skłonność do oddalania się.</div>
+              <div class="resident-scenario">SCENARIUSZ TESTOWY A</div>
+              <div class="open-hint">Otwórz kartę →</div>
+            </div>
+            <div class="resident" data-resident="B">
+              <div class="tag">B</div>
+              <b class="resident-name">Barbara Borkowska</b>
+              <div class="resident-sub">Osoba na wózku, rozpoznanie schizofrenii.</div>
+              <div class="resident-scenario">SCENARIUSZ TESTOWY B</div>
+              <div class="open-hint">Otwórz kartę →</div>
+            </div>
+            <div class="resident" data-resident="C">
+              <div class="tag">C</div>
+              <b class="resident-name">Celina Czerska</b>
+              <div class="resident-sub">Osoba leżąca, całkowicie zależna, świadoma i w kontakcie.</div>
+              <div class="resident-scenario">SCENARIUSZ TESTOWY C</div>
+              <div class="open-hint">Otwórz kartę →</div>
+            </div>
+            <div class="resident" data-resident="D">
+              <div class="tag">D</div>
+              <b class="resident-name">Danuta Domańska</b>
+              <div class="resident-sub">Osoba częściowo samodzielna, wymagająca wsparcia w organizacji dnia.</div>
+              <div class="open-hint">Otwórz kartę →</div>
+            </div>
+            <div class="resident" data-resident="E">
+              <div class="tag">E</div>
+              <b class="resident-name">Elżbieta Engel</b>
+              <div class="resident-sub">Osoba z ograniczoną mobilnością, potrzebuje pomocy przy czynnościach dnia codziennego.</div>
+              <div class="open-hint">Otwórz kartę →</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="residentDetail" class="resident-detail">
+          <div class="hero-strip">
+            <div class="flex between">
+              <div>
+                <h2 id="residentTitle">Mieszkaniec</h2>
+                <p id="residentDesc"></p>
+              </div>
+              <button id="residentBack" class="back-link">← Wróć</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title">
+              <h3>Czynności opiekuńcze</h3>
+              <span class="small"><span id="residentDoneCount">0</span>/<span id="residentAllCount">0</span> wykonanych</span>
+            </div>
+            <div id="residentCareList" class="care-list"></div>
+            <div class="resident-note">
+              To jest wersja testowa — czynności są przykładowe i służą tylko do prezentacji działania aplikacji.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="dzwonki" class="screen">
+        <div class="hero-strip">
+          <h2>Dzwonki</h2>
+          <p>Jedno kliknięcie = jeden zarejestrowany alarm. Bez wpisywania przyczyny i czasu obsługi.</p>
+        </div>
+        <div class="card bell-card">
+          <div class="small">LICZBA DZWONKÓW W TEJ ZMIANIE</div>
+          <div id="bellCount" class="bell-count">0</div>
+          <button id="bellPageBtn" class="bell-big">🔔<br>DZWONEK</button>
+        </div>
+      </section>
+
+      <section id="uwagi" class="screen">
+        <div class="hero-strip">
+          <h2>Zdarzenia / uwagi</h2>
+          <p>Krótkie wpisy, które można później wykorzystać w raporcie zmiany.</p>
+        </div>
+        <div class="card section-card">
+          <div class="field">
+            <label for="noteInput">Nowa uwaga</label>
+            <textarea id="noteInput" placeholder="Np. odmowa posiłku, zmiana zachowania, ważna informacja do przekazania..."></textarea>
+          </div>
+          <div class="actions" style="margin-top:10px">
+            <button class="btn" id="addNote">DODAJ UWAGĘ</button>
+          </div>
+        </div>
+        <div id="notesList" class="note-grid"></div>
+      </section>
+
+      <section id="raport" class="screen">
+        <div class="hero-strip">
+          <h2>Raport zmiany</h2>
+          <p>Uogólniony raport dla dużej liczby mieszkańców.</p>
+        </div>
+        <div class="report-grid">
+          <div class="card">
+            <div class="section-title"><h3>Przebieg dyżuru</h3></div>
+            <div id="autoSummary" class="summary"></div>
+            <div class="field" style="margin-top:12px">
+              <label for="exceptions">Wyjątki / niewykonane czynności</label>
+              <textarea id="exceptions"></textarea>
+            </div>
+            <div class="field" style="margin-top:12px">
+              <label for="events">Zdarzenia</label>
+              <textarea id="events"></textarea>
+            </div>
+            <div class="field" style="margin-top:12px">
+              <label for="handoff">Ważne informacje do przekazania</label>
+              <textarea id="handoff"></textarea>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title"><h3>Podsumowanie</h3></div>
+            <div class="tasklist">
+              <div class="stat"><span>Pracownik</span><b id="reportWorker">—</b></div>
+              <div class="stat"><span>Czynności</span><b id="reportTasks">0/20</b></div>
+              <div class="stat"><span>Dzwonki</span><b id="reportBells">0</b></div>
+              <div class="stat"><span>Uwagi</span><b id="reportNotes">0</b></div>
+            </div>
+            <div class="report-signatures">
+              <div class="report-sign-box">
+                <b>Podpis pracownika</b>
+                <div id="reportWorkerPreview" class="signature-preview">
+                  <div class="signature-placeholder">Brak podpisu</div>
+                </div>
+              </div>
+              <div class="report-sign-box">
+                <b>Podpis Pani Dyrektor</b>
+                <div id="reportDirectorPreview" class="signature-preview">
+                  <div class="signature-placeholder">Brak podpisu</div>
+                </div>
+              </div>
+            </div>
+            <div class="actions no-print" style="margin-top:14px">
+              <button class="btn secondary small" id="refreshReport">Odśwież</button>
+              <button class="btn small" id="downloadReport">Pobierz TXT</button>
+              <button class="btn secondary small" onclick="window.print()">Drukuj / PDF</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="podpisy" class="screen">
+        <div class="hero-strip">
+          <h2>Podpisy</h2>
+          <p>Podpis odręczny rysikiem lub palcem. Po potwierdzeniu podpis zostaje zablokowany.</p>
+        </div>
+        <div class="sign-grid">
+          <div class="sigbox">
+            <h3 style="margin-top:0">Podpis pracownika</h3>
+            <div class="small" style="margin-bottom:7px">Podpisz rysikiem lub palcem w białym polu poniżej.</div>
+            <canvas id="sigWorker" class="signature"></canvas>
+            <div class="actions" style="margin-top:10px">
+              <button class="btn" id="confirmWorkerSig">POTWIERDŹ PODPIS</button>
+            </div>
+            <div id="workerSigState" class="sigstate">Niepotwierdzony</div>
+            <div class="signature-preview-wrap">
+              <div class="signature-preview-label">Podgląd podpisu pracownika</div>
+              <div id="workerSigPreview" class="signature-preview">
+                <div class="signature-placeholder">Podpis pojawi się tutaj po zatwierdzeniu.</div>
+              </div>
+            </div>
+          </div>
+          <div class="sigbox">
+            <h3 style="margin-top:0">Podpis Pani Dyrektor</h3>
+            <div class="small" style="margin-bottom:7px">Podpisz rysikiem lub palcem w białym polu poniżej.</div>
+            <canvas id="sigDirector" class="signature"></canvas>
+            <div class="actions" style="margin-top:10px">
+              <button class="btn" id="confirmDirectorSig">POTWIERDŹ PODPIS</button>
+            </div>
+            <div id="directorSigState" class="sigstate">Niepotwierdzony</div>
+            <div class="signature-preview-wrap">
+              <div class="signature-preview-label">Podgląd podpisu Pani Dyrektor</div>
+              <div id="directorSigPreview" class="signature-preview">
+                <div class="signature-placeholder">Podpis pojawi się tutaj po zatwierdzeniu.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card no-print" style="margin-top:14px">
+          <div class="small" style="margin-bottom:8px">RESET WERSJI TESTOWEJ</div>
+          <button class="btn rose small" id="resetDemo">Wyczyść całą demonstrację</button>
+        </div>
+      </section>
+    </section>
+  </main>
+</div>
+
+<nav id="bottomNav" class="bottomnav hidden">
+  <button data-target="start" class="active"><span class="navicon">🏠</span>Start</button>
+  <button data-target="dniowka"><span class="navicon">📝</span>Dniówka</button>
+  <button data-target="dzwonki"><span class="navicon">🔔</span>Dzwonki</button>
+  <button data-target="uwagi"><span class="navicon">✏️</span>Uwagi</button>
+  <button data-target="raport"><span class="navicon">📄</span>Raport</button>
+  <button data-target="podpisy"><span class="navicon">✍️</span>Podpisy</button>
+</nav>
+
+<button id="floatingBell" class="floating-bell hidden">🔔 DZWONEK</button>
+<div id="toast" class="toast">Dzwonek zapisany</div>
+
+<script>
+const tasks = [
+["05:50","Zebranie zespołu"],
+["06:15","Toalety poranne"],
+["07:30","Przygotowanie śniadania"],
+["08:15","Rozwożenie posiłku"],
+["08:30","Karmienie osób niesamodzielnych"],
+["08:45","Zmiana pozycji"],
+["09:00","Przerwa"],
+["09:30","Kąpiele"],
+["10:00","Dopajanie + zmiana pozycji"],
+["11:00","Toalety przedpołudniowe (dzwonki)"],
+["12:00","Obiad – karmienie"],
+["13:00","Toalety popołudniowe"],
+["14:30","Spacer w ogrodzie + dopajanie + zmiana pozycji"],
+["15:00","Przerwa"],
+["15:15","Rozmowy / TV"],
+["16:00","Przygotowanie kolacji"],
+["16:45","Rozwożenie posiłku"],
+["17:00","Karmienie"],
+["17:45","Raport"],
+["18:00","Przekazanie dyżuru"]
+];
+
+const residents = {
+  A: {
+    title:"Alicja Adamska",
+    desc:"Osoba chodząca z demencją i skłonnością do oddalania się.",
+    care:[
+      "Toaleta poranna / pomoc w higienie",
+      "Kontrola bezpieczeństwa i obecności",
+      "Pomoc przy posiłku w razie potrzeby",
+      "Dopajanie",
+      "Toaleta przedpołudniowa",
+      "Spacer / aktywizacja",
+      "Toaleta popołudniowa",
+      "Przygotowanie do kolacji"
+    ]
+  },
+  B: {
+    title:"Barbara Borkowska",
+    desc:"Osoba poruszająca się na wózku, z rozpoznaniem schizofrenii.",
+    care:[
+      "Pomoc w toalecie porannej",
+      "Bezpieczne przesadzenie / przygotowanie wózka",
+      "Pomoc przy śniadaniu w razie potrzeby",
+      "Dopajanie",
+      "Kontrola komfortu pozycji na wózku",
+      "Toaleta przedpołudniowa",
+      "Aktywizacja / rozmowa",
+      "Toaleta popołudniowa"
+    ]
+  },
+  C: {
+    title:"Celina Czerska",
+    desc:"Osoba leżąca, całkowicie zależna, świadoma i w kontakcie.",
+    care:[
+      "Toaleta poranna w łóżku",
+      "Zmiana pozycji",
+      "Karmienie / pomoc przy posiłku",
+      "Dopajanie",
+      "Kontrola skóry i komfortu",
+      "Zmiana pozycji w ciągu dnia",
+      "Toaleta popołudniowa",
+      "Przygotowanie do kolacji / karmienie"
+    ]
+  },
+  D: {
+    title:"Danuta Domańska",
+    desc:"Osoba częściowo samodzielna, wymagająca wsparcia w organizacji dnia.",
+    care:[
+      "Przypomnienie o toalecie porannej",
+      "Pomoc w przygotowaniu do śniadania",
+      "Dopajanie",
+      "Wsparcie w poruszaniu się",
+      "Aktywizacja / rozmowa",
+      "Przypomnienie o obiedzie",
+      "Toaleta popołudniowa",
+      "Przygotowanie do kolacji"
+    ]
+  },
+  E: {
+    title:"Elżbieta Engel",
+    desc:"Osoba z ograniczoną mobilnością, potrzebuje pomocy przy czynnościach dnia codziennego.",
+    care:[
+      "Pomoc w toalecie porannej",
+      "Pomoc przy ubieraniu",
+      "Pomoc przy śniadaniu",
+      "Dopajanie",
+      "Kontrola komfortu pozycji",
+      "Pomoc przy obiedzie",
+      "Toaleta popołudniowa",
+      "Przygotowanie do kolacji"
+    ]
+  }
+};
+
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+let state=JSON.parse(localStorage.getItem("dpsOpiekunRecreated")||"{}");
+state.worker??="Anna Augustyn";
+state.done??={};
+state.bells??=0;
+state.notes??=[];
+state.exceptions??="";
+state.events??="";
+state.handoff??="";
+state.workerSigConfirmed??=false;
+state.directorSigConfirmed??=false;
+state.workerSigData??="";
+state.directorSigData??="";
+state.residentCare??={A:{},B:{},C:{},D:{},E:{}};
+
+function save(){localStorage.setItem("dpsOpiekunRecreated",JSON.stringify(state))}
+function doneN(){return Object.values(state.done).filter(Boolean).length}
+function signN(){return (state.workerSigConfirmed?1:0)+(state.directorSigConfirmed?1:0)}
+function toast(msg="Dzwonek zapisany"){
+  const t=$("#toast");t.textContent=msg;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),1100)
+}
+function show(id){
+  $$(".screen").forEach(s=>s.classList.remove("active"));
+  $("#"+id).classList.add("active");
+  $$("#bottomNav button").forEach(b=>b.classList.toggle("active",b.dataset.target===id));
+  if(id==="raport") refreshReport();
+  if(id==="mieszkancy") closeResident();
+
+  if(id==="podpisy"){
+    // Dopiero po pokazaniu ekranu canvas dostaje realny rozmiar.
+    requestAnimationFrame(()=>{
+      setTimeout(()=>{
+        refreshSignatureCanvases();
+        refreshSignatureViews();
+      },80);
+    });
+  }
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function currentMinutes(){
+  const d=new Date();return d.getHours()*60+d.getMinutes();
+}
+function taskMinutes(t){
+  const [h,m]=t.split(":").map(Number);return h*60+m;
+}
+function currentTaskIndex(){
+  const now=currentMinutes();
+  let idx=-1;
+  tasks.forEach((t,i)=>{if(taskMinutes(t[0])<=now)idx=i});
+  return idx;
+}
+function renderTasks(){
+  const cur=currentTaskIndex(), box=$("#taskList");box.innerHTML="";
+  tasks.forEach((t,i)=>{
+    const row=document.createElement("div");
+    row.className="task"+(state.done[i]?" done":"")+(i===cur&&!state.done[i]?" current":"");
+    row.innerHTML=`<div class="time">${t[0]}</div><div>${t[1]}</div><input type="checkbox" ${state.done[i]?"checked":""}>`;
+    row.querySelector("input").addEventListener("change",e=>{
+      state.done[i]=e.target.checked;save();renderTasks();refreshAll()
+    });
+    box.appendChild(row)
+  });
+  $("#planAll").textContent=tasks.length;
+  $("#planDone").textContent=doneN();
+}
+function renderStagePreview(){
+  const cur=currentTaskIndex();
+  const indices=[];
+  for(let i=Math.max(0,cur-1);i<=Math.min(tasks.length-1,cur+2);i++) indices.push(i);
+  if(cur<0) indices.push(0,1,2);
+  const box=$("#stagePreview");box.innerHTML="";
+  [...new Set(indices)].slice(0,4).forEach(i=>{
+    const row=document.createElement("div");
+    const past=i<cur||state.done[i];
+    row.className="task"+(past?" done":"")+(i===cur&&!state.done[i]?" current":"");
+    row.innerHTML=`<div class="time">${tasks[i][0]}</div><div>${tasks[i][1]}</div><div>${past?"✓":i===cur?"●":"○"}</div>`;
+    box.appendChild(row)
+  })
+}
+function addBell(){
+  state.bells++;save();refreshAll();toast();
+  if(navigator.vibrate)navigator.vibrate(35)
+}
+function renderNotes(){
+  const box=$("#notesList");box.innerHTML="";
+  if(!state.notes.length){
+    const d=document.createElement("div");d.className="card small";
+    d.textContent="Brak zapisanych uwag.";box.appendChild(d);return
+  }
+  state.notes.slice().reverse().forEach((n,revIdx)=>{
+    const realIdx=state.notes.length-1-revIdx;
+    const d=document.createElement("div");d.className="note-card";
+    d.innerHTML=`<div class="note-head"><div><b>Uwaga</b><div class="note-time">${n.time}</div></div>
+    <button class="btn secondary small" data-del="${realIdx}">Usuń</button></div><div class="note-text"></div>`;
+    d.querySelector(".note-text").textContent=n.text;
+    d.querySelector("[data-del]").addEventListener("click",()=>{
+      state.notes.splice(realIdx,1);save();renderNotes();refreshAll()
+    });
+    box.appendChild(d)
+  })
+}
+
+let activeResident = null;
+
+function renderResidentCare(){
+  if(!activeResident) return;
+  const r = residents[activeResident];
+  $("#residentTitle").textContent = r.title;
+  $("#residentDesc").textContent = r.desc;
+
+  const box = $("#residentCareList");
+  box.innerHTML = "";
+  const careState = state.residentCare[activeResident] || {};
+  let done = 0;
+
+  r.care.forEach((label,i)=>{
+    if(careState[i]) done++;
+    const row = document.createElement("div");
+    row.className = "care-item" + (careState[i] ? " done" : "");
+    row.innerHTML = `<div>${label}</div><input type="checkbox" ${careState[i] ? "checked" : ""}>`;
+    row.querySelector("input").addEventListener("change", e=>{
+      state.residentCare[activeResident][i] = e.target.checked;
+      save();
+      renderResidentCare();
+    });
+    box.appendChild(row);
+  });
+
+  $("#residentDoneCount").textContent = done;
+  $("#residentAllCount").textContent = r.care.length;
+}
+
+function openResident(id){
+  activeResident = id;
+  $("#residentMain").classList.add("hidden-panel");
+  $("#residentDetail").classList.add("active");
+  renderResidentCare();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function closeResident(){
+  activeResident = null;
+  $("#residentDetail").classList.remove("active");
+  $("#residentMain").classList.remove("hidden-panel");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+
+function setSignaturePreview(containerId, dataUrl, emptyText){
+  const box = $("#"+containerId);
+  if(!box) return;
+  if(dataUrl){
+    box.innerHTML = `<img src="${dataUrl}" alt="Podpis">`;
+  }else{
+    box.innerHTML = `<div class="signature-placeholder">${emptyText}</div>`;
+  }
+}
+
+function refreshSignatureViews(){
+  setSignaturePreview("workerSigPreview", state.workerSigData, "Podpis pojawi się tutaj po zatwierdzeniu.");
+  setSignaturePreview("directorSigPreview", state.directorSigData, "Podpis pojawi się tutaj po zatwierdzeniu.");
+  setSignaturePreview("reportWorkerPreview", state.workerSigData, "Brak podpisu");
+  setSignaturePreview("reportDirectorPreview", state.directorSigData, "Brak podpisu");
+}
+
+function refreshReport(){
+  const doneItems=tasks.filter((_,i)=>state.done[i]).map(t=>`${t[0]} – ${t[1]}`);
+  const notDone=tasks.filter((_,i)=>!state.done[i]);
+  const noteLines=state.notes.map(n=>`• ${n.text}`);
+  $("#autoSummary").textContent=
+`Wykonane czynności: ${doneItems.length}/${tasks.length}
+${doneItems.length?doneItems.map(x=>"• "+x).join("\n"):"• Brak zaznaczonych czynności"}
+
+Dzwonki: ${state.bells}
+Uwagi zapisane podczas zmiany: ${state.notes.length}
+${noteLines.length?noteLines.join("\n"):""}
+
+Niewykonane / niezaznaczone czynności: ${notDone.length}.`;
+  $("#reportWorker").textContent=state.worker;
+  $("#reportTasks").textContent=`${doneN()}/${tasks.length}`;
+  $("#reportBells").textContent=state.bells;
+  $("#reportNotes").textContent=state.notes.length
+}
+function refreshStats(){
+  $("#helloWorker").textContent=state.worker;
+  $("#statDone").textContent=`${doneN()}/${tasks.length}`;
+  $("#statBells").textContent=state.bells;
+  $("#statNotes").textContent=state.notes.length;
+  $("#statSigns").textContent=`${signN()}/2`;
+  $("#bellCount").textContent=state.bells;
+  $("#planDone").textContent=doneN()
+}
+function refreshAll(){
+  refreshStats();renderStagePreview();refreshReport();refreshSignatureViews()
+}
+function bindTextareas(){
+  [["exceptions","exceptions"],["events","events"],["handoff","handoff"]].forEach(([id,key])=>{
+    const el=$("#"+id);el.value=state[key]||"";
+    el.addEventListener("input",()=>{state[key]=el.value;save()})
+  })
+}
+function polar(cx,cy,r,deg){
+  const a=(deg-90)*Math.PI/180;return{x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)}
+}
+function arc(cx,cy,r,start,end){
+  const s=polar(cx,cy,r,end),e=polar(cx,cy,r,start),large=end-start<=180?0:1;
+  return `M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 0 ${e.x} ${e.y}`
+}
+function buildTicks(){
+  const g=$("#tickGroup");g.innerHTML="";
+  for(let i=0;i<24;i++){
+    const deg=180+(i/24)*360;
+    const p1=polar(120,120,82,deg),p2=polar(120,120,i%2===0?72:76,deg);
+    const l=document.createElementNS("http://www.w3.org/2000/svg","line");
+    l.setAttribute("x1",p1.x);l.setAttribute("y1",p1.y);l.setAttribute("x2",p2.x);l.setAttribute("y2",p2.y);
+    l.setAttribute("stroke",i%2===0?"#8e9f99":"#c0c9c5");l.setAttribute("stroke-width",i%2===0?"2":"1");
+    g.appendChild(l)
+  }
+}
+function updateClock(){
+  const d=new Date(), hh=String(d.getHours()).padStart(2,"0"),mm=String(d.getMinutes()).padStart(2,"0");
+  $("#clockNow").textContent=`${hh}:${mm}`;
+  const now=currentMinutes(),start=360,end=1080;
+  const pct=Math.max(0,Math.min(1,(now-start)/(end-start)));
+  const endAngle=180+pct*359.9;
+  $("#clockProgress").setAttribute("d",arc(120,120,95,180,endAngle));
+  const cur=currentTaskIndex();
+  $("#currentStage").textContent=cur<0?"Przed rozpoczęciem zmiany":(now>=1080?"Przekazanie dyżuru":tasks[Math.min(cur,tasks.length-1)][1]);
+  renderStagePreview();
+  renderTasks()
+}
+const signatureFitters = [];
+
+function refreshSignatureCanvases(){
+  signatureFitters.forEach(fn=>fn());
+}
+
+function setupSig(canvasId,dataKey,confirmKey,btnId,stateId){
+  const c=$("#"+canvasId),ctx=c.getContext("2d");
+  let drawing=false,hasInk=!!state[dataKey];
+
+  function fit(){
+    const r=c.getBoundingClientRect();
+
+    // Gdy ekran jest ukryty, canvas ma szerokość 0.
+    // Nie zmieniamy wtedy jego bufora — dopasujemy go po otwarciu ekranu.
+    if(r.width < 10 || r.height < 10) return;
+
+    const ratio=window.devicePixelRatio||1;
+    const newW=Math.floor(r.width*ratio);
+    const newH=Math.floor(r.height*ratio);
+
+    if(c.width===newW && c.height===newH) return;
+
+    c.width=newW;
+    c.height=newH;
+
+    // Rysujemy w jednostkach CSS, mimo zwiększonej rozdzielczości ekranu.
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    ctx.lineWidth=3.2;
+    ctx.lineCap="round";
+    ctx.lineJoin="round";
+    ctx.strokeStyle="#1f2f36";
+
+    if(state[dataKey]){
+      const img=new Image();
+      img.onload=()=>{
+        ctx.clearRect(0,0,r.width,r.height);
+        ctx.drawImage(img,0,0,r.width,r.height);
+      };
+      img.src=state[dataKey];
+    }
+  }
+
+  signatureFitters.push(fit);
+  window.addEventListener("resize",()=>setTimeout(fit,60));
+
+  function ensureContext(){
+    const r=c.getBoundingClientRect();
+    const ratio=window.devicePixelRatio||1;
+    if(r.width < 10) return false;
+
+    const expectedW=Math.floor(r.width*ratio);
+    const expectedH=Math.floor(r.height*ratio);
+
+    if(c.width!==expectedW || c.height!==expectedH){
+      fit();
+    }
+
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    ctx.lineWidth=3.2;
+    ctx.lineCap="round";
+    ctx.lineJoin="round";
+    ctx.strokeStyle="#1f2f36";
+    return true;
+  }
+
+  function pos(e){
+    const r=c.getBoundingClientRect();
+    return {x:e.clientX-r.left,y:e.clientY-r.top};
+  }
+
+  c.addEventListener("pointerdown",e=>{
+    if(state[confirmKey]) return;
+    if(!ensureContext()) return;
+
+    e.preventDefault();
+    drawing=true;
+    hasInk=true;
+
+    try{ c.setPointerCapture(e.pointerId); }catch(_){}
+
+    const p=pos(e);
+    ctx.beginPath();
+    ctx.moveTo(p.x,p.y);
+
+    // Maleńki punkt sprawia, że nawet krótkie dotknięcie rysikiem jest widoczne.
+    ctx.lineTo(p.x+0.01,p.y+0.01);
+    ctx.stroke();
+  });
+
+  c.addEventListener("pointermove",e=>{
+    if(!drawing || state[confirmKey]) return;
+    e.preventDefault();
+
+    const p=pos(e);
+    ctx.lineTo(p.x,p.y);
+    ctx.stroke();
+  });
+
+  function end(e){
+    if(!drawing) return;
+    if(e) e.preventDefault();
+    drawing=false;
+    state[dataKey]=c.toDataURL("image/png");
+    save();
+    refreshSignatureViews();
+  }
+
+  c.addEventListener("pointerup",end);
+  c.addEventListener("pointercancel",end);
+  c.addEventListener("pointerleave",e=>{
+    if(drawing && e.buttons===0) end(e);
+  });
+
+  const btn=$("#"+btnId),st=$("#"+stateId);
+
+  function lock(){
+    if(state[confirmKey]){
+      btn.disabled=true;
+      btn.textContent="PODPIS ZATWIERDZONY";
+      st.textContent="✓ Zatwierdzono";
+      st.classList.add("ok");
+      c.style.opacity=".90";
+    }
+  }
+
+  btn.addEventListener("click",()=>{
+    if(!hasInk && !state[dataKey]){
+      alert("Najpierw złóż podpis.");
+      return;
+    }
+
+    ensureContext();
+    state[dataKey]=c.toDataURL("image/png");
+    state[confirmKey]=true;
+    save();
+    lock();
+    refreshStats();
+    refreshSignatureViews();
+    refreshReport();
+  });
+
+  lock();
+}
+function enter(){
+  state.worker=$("#worker").value;save();
+  $("#loginScreen").classList.add("hidden");$("#mainApp").classList.remove("hidden");
+  $("#bottomNav").classList.remove("hidden");$("#floatingBell").classList.remove("hidden");
+  refreshAll();show("start")
+}
+$("#loginBtn").addEventListener("click",()=>{
+  if($("#pin").value!=="1234"){alert("Nieprawidłowy PIN testowy.");return}enter()
+});
+$("#demoBtn").addEventListener("click",enter);
+$("#logoutBtn").addEventListener("click",()=>location.reload());
+$$("[data-jump]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.jump)));
+$$("#bottomNav button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.target)));
+
+$$("[data-resident]").forEach(card=>{
+  card.addEventListener("click",()=>openResident(card.dataset.resident));
+});
+$("#residentBack").addEventListener("click",closeResident);
+
+$("#floatingBell").addEventListener("click",addBell);
+$("#bellPageBtn").addEventListener("click",addBell);
+$("#addNote").addEventListener("click",()=>{
+  const el=$("#noteInput"),txt=el.value.trim();if(!txt)return;
+  state.notes.push({text:txt,time:new Date().toLocaleString("pl-PL")});el.value="";save();renderNotes();refreshAll();toast("Uwaga zapisana")
+});
+$("#refreshReport").addEventListener("click",refreshReport);
+$("#downloadReport").addEventListener("click",()=>{
+  refreshReport();
+  const text=`DPS OPIEKUN — RAPORT ZMIANY
+Pracownik: ${state.worker}
+Zmiana: 06:00–18:00
+Wykonane czynności: ${doneN()}/${tasks.length}
+Dzwonki: ${state.bells}
+Uwagi: ${state.notes.length}
+
+PRZEBIEG DYŻURU
+${$("#autoSummary").textContent}
+
+WYJĄTKI / NIEWYKONANE CZYNNOŚCI
+${state.exceptions||"Brak wpisu"}
+
+ZDARZENIA
+${state.events||"Brak wpisu"}
+
+WAŻNE INFORMACJE DO PRZEKAZANIA
+${state.handoff||"Brak wpisu"}
+
+Podpis pracownika: ${state.workerSigConfirmed?"ZATWIERDZONY":"NIEZATWIERDZONY"}
+Podpis Pani Dyrektor: ${state.directorSigConfirmed?"ZATWIERDZONY":"NIEZATWIERDZONY"}
+
+WERSJA TESTOWA — DANE FIKCYJNE`;
+  const blob=new Blob([text],{type:"text/plain;charset=utf-8"}),a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download="DPS_Opiekun_raport_testowy.txt";a.click();URL.revokeObjectURL(a.href)
+});
+$("#resetDemo").addEventListener("click",()=>{
+  if(confirm("Wyczyścić całą demonstrację?")){localStorage.removeItem("dpsOpiekunRecreated");location.reload()}
+});
+
+buildTicks();
+renderTasks();
+renderNotes();
+bindTextareas();
+refreshAll();
+refreshSignatureViews();
+updateClock();
+setInterval(updateClock,60000);
+setupSig("sigWorker","workerSigData","workerSigConfirmed","confirmWorkerSig","workerSigState");
+setupSig("sigDirector","directorSigData","directorSigConfirmed","confirmDirectorSig","directorSigState");
+</script>
+</body>
+</html>
